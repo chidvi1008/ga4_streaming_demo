@@ -1,24 +1,48 @@
 version: 2
 
 models:
-  - name: stg_events
-    description: "Raw streaming events table"
+  - name: int_events
+    description: "Deduped streaming events"
     columns:
       - name: event_id
+        description: "Unique event identifier"
         tests: [not_null, unique]
       - name: user_id
+        description: "User identifier"
         tests: [not_null]
-
-  - name: int_events
-    description: "Deduped events"
-    columns:
-      - name: event_id
-        tests: [not_null, unique]
+      - name: event_name
+        description: "Event name, e.g., page_view, add_to_cart"
+      - name: source
+        description: "Traffic source"
+      - name: medium
+        description: "Traffic medium"
+      - name: campaign
+        description: "Campaign name if available"
       - name: event_timestamp
+        description: "Event timestamp"
         tests: [not_null]
+      - name: ingestion_time
+        description: "Time the event was ingested"
 
   - name: mart_attribution
-    description: "Per-user first/last attribution"
+    description: "Per-user first and last click attribution"
     columns:
       - name: user_id
+        description: "User identifier"
         tests: [not_null]
+      - name: first_click_ts
+        description: "Timestamp of first click in the last 14 days"
+      - name: last_click_ts
+        description: "Timestamp of last click in the last 14 days"
+      - name: first_source
+        description: "Source of first click"
+      - name: last_source
+        description: "Source of last click"
+      - name: first_medium
+        description: "Medium of first click"
+      - name: last_medium
+        description: "Medium of last click"
+      - name: first_campaign
+        description: "Campaign of first click"
+      - name: last_campaign
+        description: "Campaign of last click"
