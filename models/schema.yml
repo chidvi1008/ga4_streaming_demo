@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_events
+    description: "Raw streaming events table"
+    columns:
+      - name: event_id
+        tests: [not_null, unique]
+      - name: user_id
+        tests: [not_null]
+
+  - name: int_events
+    description: "Deduped events"
+    columns:
+      - name: event_id
+        tests: [not_null, unique]
+      - name: event_timestamp
+        tests: [not_null]
+
+  - name: mart_attribution
+    description: "Per-user first/last attribution"
+    columns:
+      - name: user_id
+        tests: [not_null]
