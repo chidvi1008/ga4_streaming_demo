@@ -1,11 +1,10 @@
+# dbt_project.yml
 name: 'ga4_streaming_demo'
 version: '1.0.0'
 config-version: 2
 
-# dbt profile to use for connections
 profile: 'default'
 
-# Paths for different dbt resources
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -13,20 +12,29 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-# Compiled SQL location
 target-path: "target"
-
-# Directories removed by `dbt clean`
 clean-targets:
   - "target"
   - "dbt_packages"
 
+# -----------------------------------------------------------------------------
 # Model configurations
+# -----------------------------------------------------------------------------
 models:
   ga4_streaming_demo:
+    # Staging layer: raw events from BigQuery → clean schema
     stg:
-      +materialized: view          # staging: raw events
+      +materialized: view
+      +schema: stg
+
+    # Intermediate layer: attribution, deduplication, enrichment
     int:
-      +materialized: view          # intermediate: cleaned / deduped
+      +materialized: view
+      +schema: int
+
+    # Mart layer: aggregated metrics and reports
     mart:
-      +materialized: incremental   # mart: First/Last click attribution
+      +materialized: incremental
+      +schema: mart
+      +unique_key: event_id
+      +on_schema_change: append_new_columns
