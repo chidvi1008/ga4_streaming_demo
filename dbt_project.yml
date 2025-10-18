@@ -1,4 +1,3 @@
-# dbt_project.yml
 name: 'ga4_streaming_demo'
 version: '1.0.0'
 config-version: 2
@@ -17,24 +16,9 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-# -----------------------------------------------------------------------------
-# Model configurations
-# -----------------------------------------------------------------------------
 models:
   ga4_streaming_demo:
-    # Staging layer: raw events from BigQuery → clean schema
-    stg:
-      +materialized: view
-      +schema: stg
-
-    # Intermediate layer: attribution, deduplication, enrichment
     int:
-      +materialized: view
-      +schema: int
-
-    # Mart layer: aggregated metrics and reports
+      +materialized: incremental
     mart:
       +materialized: incremental
-      +schema: mart
-      +unique_key: event_id
-      +on_schema_change: append_new_columns
