@@ -1,0 +1,45 @@
++------------------------+
+|   Event Generator CF   |  <-- Cloud Function: generate_events
+|  (simulate GA4 events) |
++-----------+------------+
+            |
+            v
++------------------------+
+|      Pub/Sub Topic     |  <-- ga4_events
+|  (asia-south1)         |
++-----------+------------+
+            |
+            v
++------------------------+
+|   Cloud Function CF    |  <-- pubsub_to_bq
+|   (Pub/Sub → BigQuery) |
++-----------+------------+
+            |
+            v
++------------------------+
+|    BigQuery Dataset    |  <-- realtime_demo
+|                        |
+|   stg_events           |  <- Raw events (direct ingestion possible)
+|   int_events           |  <- Incremental + deduplicated
+|   mart_attribution     |  <- Aggregated metrics, first/last attribution
++-----------+------------+
+            |
+            v
++------------------------+
+|          dbt           |
+|  - Incremental models  |
+|  - Deduplication       |
+|  - Mart aggregation    |
+|  - Tests & documentation|
++-----------+------------+
+            |
+            v
++------------------------+
+|     Visualization      |
+| Looker Studio / Metabase / Streamlit |
+|  - First vs Last totals|
+|  - 14-day time series  |
+|  - Channel breakdown   |
+|  - Live event panel    |
++------------------------+
+
